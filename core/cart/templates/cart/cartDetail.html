@@ -182,7 +182,7 @@
 
 				<div id="checkout-control" class="field">
 					<div class="control">
-						<input type="submit" value="Checkout" class="btn bg-dark text-light"/>
+						<input type="button" onclick="StripePayment()" value="Checkout" class="btn bg-dark text-light"/>
 					</div>
 				</div>
 			</div>
@@ -242,9 +242,8 @@
 		card.mount('#card-element')
 
 		var form = document.getElementById('checkout-control');
-		form.addEventListener('submit',function(event){
-			event.preventDefault();
-			console.log('activated')
+		function StripePayment(event){
+	
 			stripe.createToken(card).then(function(result) {
 
 				if (result.error){
@@ -257,7 +256,7 @@
 					stripeTokenHandler(result.token);
 				}
 			});
-		});
+		};
 
 		function stripeTokenHandler(token) {
 			var form = document.getElementById('payment-form');
