@@ -149,6 +149,7 @@ def cartDetail(request):
 		return redirect('cart')
 
 	context = {'checkoutForm':form,
-				'stripe_pub_key':settings.STRIPE_PUB_KEY,}
+				'stripe_pub_key':settings.STRIPE_PUB_KEY,
+				'paypal_key':settings.PAYPAL_KEY}
 
 	return render(request, 'cart/cartDetail.html', context)

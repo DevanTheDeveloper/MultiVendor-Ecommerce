@@ -28,6 +28,7 @@
             {% if request.user.is_authenticated %}
             <li class="px-2"><a class="dropdown-item" href="{% url 'cxOrders' %}">My Orders</a></li>
             <li class="px-2"><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+            <li class="px-2"><a class="dropdown-item" href="{% url 'inbox' %}">Messages</a></li>
             <li class="px-2"><a class="dropdown-item" href="{% url 'cx_logout' %}">Logout</a></li>
             {% else %}
             <li><a class="dropdown-item" href="{% url 'cx_login' %}">Login/Register</a></li>

@@ -174,3 +174,4 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
 GOC_API_KEY = os.environ.get('GOC_API_KEY')
+PAYPAL_KEY = os.environ.get('PAYPAL_ID')

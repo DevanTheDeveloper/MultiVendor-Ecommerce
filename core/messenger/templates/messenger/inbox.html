@@ -7,15 +7,28 @@
 
 
 
-	<div class="border border-2 rounded bg-mute my-4 p-2">
+	<div id="inbox__container" class="border border-2 rounded bg-mute my-4 p-2">
+
+
+
 		{% for thread in inboxMessages %}
-			<div class=" my-2 row">
-				<div class="col">
+
+			<div id="inbox__message" class=" my-2 row">
+
+				<div id="inbox__vendor" class="col">
 					<a class="btn rounded-pill btn-dark" href="{% url 'vendor' thread.vendor.id %}">
 					{{thread.vendor}}
 					</a>
 				</div>
-				<div class="col">
+
+				<div id="inbox__vendor" class="col">
+					<a class="btn rounded-pill btn-dark" href="{% url 'thread' thread.id %}"> 
+					{{thread.host}}
+					</a>
+				</div>
+
+
+				<div id="inbox__subject" class="col">
 					<a href="{% url 'thread' thread.id %}">
 					Subject: {{thread.subject}}
 					</a>
@@ -28,6 +41,7 @@
 				</div>
 
 			</div>
+			<hr/>
 		{% endfor %}
 	</div>
 

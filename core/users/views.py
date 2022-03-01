@@ -14,7 +14,7 @@ def register(request):
 			username=form.cleaned_data.get('username')
 			
 			messages.success(request, f'Your account {username} has been created! You can now log in!')
-			return redirect('login')
+			return redirect('cx_login')
 
 	else:
 		form = UserRegisterForm()

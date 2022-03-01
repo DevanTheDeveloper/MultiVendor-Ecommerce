@@ -8,10 +8,15 @@
 			<h1 class='display-6'> Vendor Admin - {{ vendor.title  }}</h1>
 			<strong>Unpaid Balance:</strong> ${{vendor.get_unpaid_balance}}<br>
 			<strong>Paid Balance:</strong> ${{vendor.get_paid_balance}}<br>
+
 			<div class="my-2">
+				
 			<a class="btn btn-primary"href="{% url 'vendorEdit' %}">Update Vendor Profile</a>
 			<a class="btn btn-warning"href="{% url 'vendor_logout' %}">Logout</a>
+			<a class="btn bg-dark text-light justify-content-end" href="{% url 'vendorInbox' %}">Messages</a>
+
 			</div>
+
 		</div>
 		<div class="col">
 			<p class="text-end"><strong>Store Views: {{vendor.views}}</strong></p>

@@ -9,12 +9,22 @@ from .forms import MessageForm
 
 @login_required
 def inbox(request):
+
 	inboxMessages = Thread.objects.filter(host=request.user)
 	context = {'inboxMessages':inboxMessages}
 	print(context)
 	return render(request, 'messenger/inbox.html', context)
 
 
+@login_required
+def vendorInbox(request):
+
+	inboxMessages = Thread.objects.filter(vendor=request.user.vendor)
+	context = {
+
+					'inboxMessages':inboxMessages
+	}
+	return render(request,'messenger/inbox.html',context)
 
 @login_required
 def createThread(request,pk):
