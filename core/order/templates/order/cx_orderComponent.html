@@ -1,0 +1,70 @@
+  <div class="{% if order.fully_paid %}bg-success{% else %}bg-mute{% endif %} border border-1 border-dark shadow-lg rounded my-3 p-2">
+        <div class="row">
+          <div class="col">
+            <h3>#{{order.id}} - {{order.first_name}} {{order.last_name}}</h3>
+
+          </div>
+
+          <div>
+            <b>Name: </b>{{order.first_name}} {{order.last_name}}
+            <br>
+            <b>Address: </b>{{order.address1}} - {{order.address2}}
+            <br>
+            <b>Zip/Country: </b>{{order.zipcode}} - {{order.country}}
+            <br>
+            <b>E-mail: </b>{{order.email}}
+            <br>
+            <b>Phone: </b>{{order.phone}}
+            
+            <div class="table-responsive">
+              <table class="table mt-4">
+                <thead>
+                  <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">SubCategory</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Total</th>
+                  </tr>
+                </thead>
+
+
+                <tbody>
+                  {% for item in order.items.all %}
+
+                    <tr>
+                        <td>{{item.product.title}}</td>
+                        <td>{{item.product.subcategory}}</td>
+                        <td>{{item.product.category}}</td>
+                        <td>{{item.product.price}}</td>
+                        <td>{{item.quantity}}</td>
+                        <td>{{item.get_total_price}}</td>
+
+                      </tr>
+                 
+                  {% endfor %}
+
+                </tbody>
+               <tfoot>
+            <tr>
+             <td></td>
+              <td></td>
+              <td></td>
+              
+              <td><strong>Cart Total</strong></td>
+              <td><strong>{{ order.get_cart_items }}</strong></td>
+              <td colspan="2"><strong>${{ order.get_cart_total }}</strong></td>
+            </tr>
+
+          </tfoot>
+                  
+              </table>
+            </div>
+            <span class="d-flex justify-content-center">Ordered: {{order.created_at}}</span>
+          </div>
+
+
+        </div>
+        
+      </div>

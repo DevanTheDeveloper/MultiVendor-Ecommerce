@@ -1,0 +1,39 @@
+{% extends 'site/main.html' %}
+{% block title %}Vendors | {% endblock %}
+{% block content %}
+<h1 class="display-1"> Our Vendors </h1>
+
+<div class="row">
+	{% if vendors %}
+	{% for vendor in vendors %}
+		<div class="col-3 " >
+
+			<div class="card" style="width: 18rem">
+				<div class="row">
+					<div class="col">
+						<h6 class="card-subtitle mb-2 p-1 text-muted text-end">Stars</h6>
+					</div>
+					<div class="col">
+						<h6 class="card-subtitle mb-2 p-1 text-muted text-end">{{vendor.city}},{{vendor.state}}</h6>
+					</div>
+				</div>
+			  <div class="card-body">
+			    <h5 class="card-title display-6">{{vendor.title}}</h5>
+			    
+			    <p class="card-text" style="min-height: 10vh;">{% if vendor.description %} {{vendor.description}}{% endif %}</p>
+			    
+			   
+					<a class="btn btn-dark" href="{% url 'vendor' vendor.id %}">View Store</a>
+					<a class="btn btn-outline-dark" href="{% url 'vendorInfo' vendor.id %}">Info</a>
+				
+
+
+			  </div>
+			</div>
+
+		</div>
+	{% endfor %}
+	{% endif %}
+</div>
+
+{% endblock %}

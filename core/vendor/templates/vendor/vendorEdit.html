@@ -1,0 +1,20 @@
+{% extends 'site/main.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Vendor Update | {% endblock %}
+{% block content %}
+
+	<h1 class="display-1 mt-4">Edit Vendor</h1>
+
+	<form method="POST" action="">
+		{% csrf_token %}
+
+		{{form|crispy}}
+
+		<button class="btn btn-primary my-3" action="submit">Update</button>
+	</form>
+	<a class="btn btn-warning my-3"href="{% url 'vendorAdmin' %}">Vendor Admin</a>
+
+
+
+
+{% endblock %}

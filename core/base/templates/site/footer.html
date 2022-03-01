@@ -1,0 +1,17 @@
+
+<footer class="footer py-3 text-center" >
+	
+
+	{% if vendor %}
+	<h4 class=" mb-4">{{ vendor.title }}</h4>
+	{% endif %}
+		{% if request.user.is_authenticated %}
+	
+	<a href="{% url 'vendorAdmin' %}">Vendor Admin</a>
+	{% else %}
+	<a href="{% url 'vendorRegister' %}">Become a Vendor</a>
+
+	
+	{% endif %}
+	<a href="{% url 'vendorList' %}">Vendors</a>
+</footer>

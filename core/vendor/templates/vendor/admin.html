@@ -1,0 +1,107 @@
+{% extends 'site/main.html' %}
+{% load crispy_forms_tags %}
+{% block title %} Vendor admin | {% endblock %}
+{% block content %}
+<div class="border border-dark shadow rounded my-3 p-2">
+	<div class="row">
+		<div class="col">
+			<h1 class='display-6'> Vendor Admin - {{ vendor.title  }}</h1>
+			<strong>Unpaid Balance:</strong> ${{vendor.get_unpaid_balance}}<br>
+			<strong>Paid Balance:</strong> ${{vendor.get_paid_balance}}<br>
+			<div class="my-2">
+			<a class="btn btn-primary"href="{% url 'vendorEdit' %}">Update Vendor Profile</a>
+			<a class="btn btn-warning"href="{% url 'vendor_logout' %}">Logout</a>
+			</div>
+		</div>
+		<div class="col">
+			<p class="text-end"><strong>Store Views: {{vendor.views}}</strong></p>
+		</div>
+
+	</div>
+</div>
+
+<div class="border border-dark shadow border-round mt-4">
+	<h2 class='mb-4 p-2 display-6 '> My Products </h1>
+		<a class="btn btn-dark mx-2" href="{% url 'addProduct' %}">Add Product</a>
+		<a id="subcategoryButton" class="btn btn-dark mx-2" href="{% url 'addSubCategory' %}">Add SubCategory</a>
+		{% if products %}
+		<table class="table is-fullwidth">
+			<thead>
+				<tr>
+					<th>Title </th>
+					<th>SubCategory</th>
+					<th>Category </th>
+					<th>Price</th>
+					<th>Reviews</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for product in products %}
+				<tr>
+					<td><a href="{% url 'productDetail' product.category.slug product.slug %}">{{product.title}}</a></td>
+					<td><a href="{% url 'productDetail' product.category.slug product.slug %}">{{product.subcategory}}</a></td>
+					<td><a href="{% url 'productCategory' product.category.slug %}">{{product.category}}</a></td>
+					<td>{{product.price}}</td>
+					<td><a href="">{{ product.productReviews.all.count }}</a></td>
+					<td><a href="{% url 'updateProduct' product.id %}">Edit</a></td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		{% else %}
+		<p>You haven't listed any yet!</p>
+		{% endif %}
+</div>
+
+<div class='container'>
+	<h2 class='my-4'>My Orders</h2>
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        	<form id="results" method="GET" action="">
+        		{{ resForm|crispy }}
+        		<input type="submit" hidden />
+        	</form>
+
+			        <span class="current d-flex justify-content-end">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+
+</div>
+	<div id="order-wrapper">
+   		 {% for order in page_obj %}
+    		{% include 'order/orderComponent.html' %}
+		{% endfor %}
+	</div>
+</div>
+
+
+<div id="orders-tab">
+	<ul class="nav nav-tabs" id="myTab" role="tablist">
+	  <li class="nav-item" role="presentation">
+	    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Home</button>
+	  </li>
+	  <li class="nav-item" role="presentation">
+	    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Profile</button>
+	  </li>
+	  <li class="nav-item" role="presentation">
+	    <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Contact</button>
+	  </li>
+	</ul>
+	<div class="tab-content" id="myTabContent">
+	  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">...</div>
+	  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
+	  <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+	</div>
+</div>
+{% endblock %}

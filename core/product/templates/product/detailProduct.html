@@ -1,0 +1,192 @@
+{% extends 'site/main.html' %}
+
+{% block content %}
+<div class="container" id="productApp">
+
+	<div class="row" style="min-height:80vh">
+		<div class="col lg-6 d-flex align-items-center">
+				{% if product.image %}
+					<figure class="mb-6 ">
+						<img class="img-fluid mb-6" :src="mainImage.image" style="height:30vh">
+						
+					</figure>
+				{% endif %}
+
+				{% if product.images.all %}
+				<hr>
+
+				<div class="row">
+					<div class="col-lg-3 col-sm-1"  v-for="image in images" v-bind:key="image.id">
+						<img class="img-fluid" style="width: auto;height:15vh; object-fit:contain":src="image.thumbnail" @click="changeMainImage(image)">
+					</div>
+				</div>
+
+				{% endif %}
+
+		</div>
+
+		<div class="col-lg-6">
+			<div class="row my-4">
+				<div class="col mt-4">
+					<h1 class='display-4'>{{product.title}}</h1>
+				</div>
+
+				<div class="col ">
+					<a href="{% url 'vendor' product.vendor.id %}" class="badge rounded-pill bg-dark ">{{product.vendor.title}}</a>
+				</div>
+			</div>
+
+				
+
+				<p>{{product.description}}</p>
+				<h2>${{product.price}}</h2>
+
+
+				<hr>
+
+				<form method="GET" action="{% url 'cart' %}">
+
+						<div class="control">
+							<input type="number" name="change_quantity" value="{{product.id}}" class="d-none input">
+
+						</div>		
+						<div class="control">
+							<input type="number" name="quantity" value="1" class="input" min="1">
+
+						</div>
+						<div class="control">
+							<button class="btn bg-dark text-light">Add to cart</button>
+						
+						</div>
+
+
+				</form>
+
+				<div class="mb-4">
+					<div class="">
+					<span class="display-5 mt-4">Reviews</span>
+					<span class="d-flex text-end"><a href="{% url 'productReview' product.category.slug product.slug %}">Leave a Review</a></span>
+					<div class="col">
+					    {% if reviews %}
+						    {% for review in reviews %}
+						    	<div class="row my-2">
+						    		{% include 'product/productReviewComponent.html' %}
+						    	</div>
+						    {% endfor %}
+					    {% endif %}
+					</div>
+				</div>
+		</div>
+	</div>
+	
+	
+	
+	{% if similar %}
+
+	<hr>
+	<div class="container">
+		<div class="row">
+			<h2>Similar Products</h2>
+		</div>
+		<div class="row">
+
+		{% for product in similar %}
+			<div class='col-3'>
+				
+		<div class="card shadow border-round h-100">
+			<figure class='m-4 h-100'>
+				<img class="card-img" src="{{ product.get_thumbnail }}" style="height:10vh; object-fit:contain">
+			</figure>
+			<div class="card-body">
+				<h5 class='card-title'> {{product.title}} </h5>
+				<div class="row">
+					<div class="col">
+						<p class='card-text mb-3 text-success'>In Stock</p>
+					</div>
+					<div class="col">
+						<p class='card-text mb-3'>${{product.price}}</p>
+					</div>
+				</div>
+						<a class="btn btn-dark rounded-pill" href="{% url 'vendor' product.vendor.id %}">{{product.vendor}} </a>
+					
+				
+						<div class='d-flex justify-text-end pt-2'>
+
+							<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="#FFD700" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+
+							<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="#FFD700" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+
+							<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="#FFD700" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+
+
+							<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>						
+						</div>
+						
+				
+			
+				<hr>
+				<div class="row">
+					<span>
+						<a href="{% url 'productDetail' product.category.slug product.slug  %}" class="btn btn-dark">View</a> 
+
+						{% if request.user.vendor == product.vendor %}
+							<a class="btn btn-warning" href="{% url 'updateProduct' product.id %}">Update</a>
+						{% else %}
+							
+							<a class="btn btn-warning" href="{% url 'cart' %}?change_quantity={{product.id}}&quantity=1">Add to Cart</a>
+							
+					{% endif %}
+					</span>
+				</div>
+
+
+			</div>
+		</div>
+
+
+			</div>
+		{% endfor %}
+		</div>
+</div>
+
+	{% endif %}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ imagesString|json_script:"imagesString" }}
+<script src="https://unpkg.com/vue@next"></script>
+<script>
+
+	const ProductApp = {
+			data() {
+				return {
+					mainImage:'',
+					images: []
+
+				}
+			},
+			mounted() {
+
+				this.images = JSON.parse(JSON.parse(document.getElementById("imagesString").textContent))
+				this.mainImage = this.images[0]
+
+			},
+
+			methods: {
+				changeMainImage(image) {
+					this.mainImage = image 
+				}
+			}
+
+
+
+		}
+
+	Vue.createApp(ProductApp).mount('#productApp')
+
+
+</script>
+
+{% endblock %}

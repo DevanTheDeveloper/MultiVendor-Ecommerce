@@ -1,0 +1,37 @@
+{% extends 'site/main.html' %}
+
+{% block title %} Message with {{thread.vendor}} | {% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+	<h1> Messages</h1>
+
+
+
+	<div class="border border-2 rounded bg-mute my-4 p-2">
+		{% for thread in inboxMessages %}
+			<div class=" my-2 row">
+				<div class="col">
+					<a class="btn rounded-pill btn-dark" href="{% url 'vendor' thread.vendor.id %}">
+					{{thread.vendor}}
+					</a>
+				</div>
+				<div class="col">
+					<a href="{% url 'thread' thread.id %}">
+					Subject: {{thread.subject}}
+					</a>
+				</div>
+				<div class="col">					{{thread.messages.first.content}}
+
+				</div>
+				<div class="col">
+					<span>Last Updated: {{thread.updated}}</span>
+				</div>
+
+			</div>
+		{% endfor %}
+	</div>
+
+	
+
+
+{% endblock %}

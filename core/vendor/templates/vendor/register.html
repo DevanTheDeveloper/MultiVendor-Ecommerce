@@ -1,0 +1,21 @@
+{% extends 'site/main.html' %}
+{% block title %}Register | {% endblock %}
+{% block content %}
+<h1 class="title"> Become a Vendor!</h1>
+<form method="POST" action="">
+	{% csrf_token %}
+	{{form.as_p}}
+	
+	<div class="field">
+		<div class="control">
+
+			<button class="btn btn-success">Sign Up</button>
+		</div>
+	</div>
+</form>
+
+<hr>
+
+<h2 class="">Already have an account?</h2>
+<a href="{% url 'cx_login' %}">Login</a>
+{% endblock %}

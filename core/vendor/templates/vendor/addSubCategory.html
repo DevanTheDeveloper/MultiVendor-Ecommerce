@@ -1,0 +1,18 @@
+{% extends 'site/main.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Add SubCategory |{% endblock %}
+{% block content %}
+<h1 class="title mt-4"> Add a SubCategory for your products! </h1>
+<form method="POST" action="" enctype="multipart/form-data">
+	{% csrf_token %}
+	{{form|crispy}}
+	
+	<div class="field">
+		<div class="control">
+
+			<button class="btn btn-success my-4" type="submit">Add</button>
+		</div>
+	</div>
+</form>
+
+{% endblock %}

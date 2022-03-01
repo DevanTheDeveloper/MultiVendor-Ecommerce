@@ -1,0 +1,61 @@
+{% extends 'site/main.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %} Welcome | {% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+	<div class="d-flex justify-content-between justify-content-lg-end  mt-2">
+		<span><a style="min-width:15vh" class="btn btn-dark rounded-pill" href="{% url 'vendorList' %}">Vendor<br>List</a></span>
+	</div>
+	<div class="row my-4">
+		<h1 class='display-1 text-center'>MarketPlace Products</h1>
+	</div>
+
+
+	<div class="d-flex justify-content-between">
+		<div class="pagination">
+		    <span class="step-links">
+		        {% if page_obj.has_previous %}
+		            <a href="?page=1">&laquo; first</a>
+		            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+		        {% endif %}
+
+
+
+					        <span class="current d-flex justify-content-end">
+		            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+		        </span>
+		        {% if page_obj.has_next %}
+		            <a href="?page={{ page_obj.next_page_number }}">next</a>
+		            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+		        {% endif %}
+		    </span>
+		</div>
+
+	    <div class="d-flex justify-content-end">
+	    	    <form id="results" method="GET" action="">
+	        		{{ resForm|crispy }}
+	        		<input type="submit" hidden />
+	        	</form>
+	    </div>
+	</div>
+
+	<div class="row mt-4">
+		
+
+			{% for product in page_obj  %}
+			<div class='col-md-3 my-2'>
+				{% include "product/detailComponent.html" %}
+			
+			</div>
+			{% endfor %}
+			
+	</div>
+
+
+</div>
+
+{% endblock %}

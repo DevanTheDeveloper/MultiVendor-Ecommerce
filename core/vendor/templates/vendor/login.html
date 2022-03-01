@@ -1,0 +1,22 @@
+{% extends 'site/main.html' %}
+{% block title %}Log In | {% endblock %}
+{% block content %}
+<h1 class="title"> Welcome Back!</h1>
+<form method="POST" action="">
+	{% csrf_token %}
+	{{form.as_p}}
+	
+	<div class="field">
+		<div class="control">
+
+			<button class="btn btn-success">Sign In</button>
+		</div>
+	</div>
+</form>
+
+
+<hr>
+
+<h2 class="">Don't have an account?</h2>
+<a href="{% url 'vendorRegister' %}">Become a Vendor</a>
+{% endblock %}

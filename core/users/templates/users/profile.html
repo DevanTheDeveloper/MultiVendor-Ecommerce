@@ -1,0 +1,63 @@
+{% extends 'site/main.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+	<div class="container mt-4">
+
+				<div class= "content-section ">
+				  <div class="	.d-block .d-sm-none">
+						<img class="rounded-circle img-fluid" style="height:20vh;" src="{{ user.profile.image.url }}">
+						<div class="media-body">
+							<h2 class= "account-heading">{{ user.username }}</h2>
+							<p class="text-secondary">{{ user.email }}</p>
+						</div>
+					</div>
+
+
+				<form method="POST" enctype="multipart/form-data">
+						{% csrf_token %}
+						<fieldset class="form-group mb-2">
+
+
+							<div class="row">
+						  <div class="col-4">
+			
+
+
+
+						    <div class="list-group" id="list-tab" role="tablist">
+						      <a class="list-group-item list-group-item-action bg-dark text-light   border-1 border-light active" id="list-home-list" data-bs-toggle="list" href="#list-home" role="tab" aria-controls="list-home">Login</a>
+						      <a class="list-group-item list-group-item-action bg-dark text-light  border-1 border-light" id="list-profile-list" data-bs-toggle="list" href="#list-profile" role="tab" aria-controls="list-profile">Profile</a>
+						      <a class="list-group-item list-group-item-action bg-dark text-light   border-1 border-light px-auto" id="list-messages-list" data-bs-toggle="list" href="#list-messages" role="tab" aria-controls="list-messages">Address</a>
+						    </div>
+						    <div class="form-group my-2 ">
+								<button class="btn btn-outline-info" type="submit">Update</button>
+							</div>
+						  </div>
+						  <div class="col-8">
+						    <div class="tab-content" id="nav-tabContent">
+						      <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">{{u_form|crispy}}</div>
+						      <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">{{p_form|crispy}}.</div>
+						      <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">{{shipping_form|crispy}}</div>
+
+						    </div>
+						  </div>
+						</div>
+
+						</fieldset>
+
+
+
+
+					</form>
+				
+				</div>
+
+	</div>
+	
+
+
+{% endblock content %}
+
+
+
+

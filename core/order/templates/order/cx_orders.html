@@ -1,0 +1,39 @@
+{% extends 'site/main.html' %}
+{% load crispy_forms_tags %}
+{% block title %} Orders | {% endblock %}
+
+{% block content %}
+
+<h1 class="Display-4"> Orders </h1>
+
+<div class="d-flex justify-content-between">
+	<div class="pagination">
+	    <span class="step-links">
+	        {% if page_obj.has_previous %}
+	            <a href="?page=1">&laquo; first</a>
+	            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+	        {% endif %}
+
+
+
+				        <span class="current d-flex justify-content-end">
+	            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+	        </span>
+	        {% if page_obj.has_next %}
+	            <a href="?page={{ page_obj.next_page_number }}">next</a>
+	            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+	        {% endif %}
+	    </span>
+	</div>
+
+    <div class="d-flex justify-content-end">
+    	    <form id="results" method="GET" action="">
+        		{{ resForm|crispy }}
+        		<input type="submit" hidden />
+        	</form>
+    </div>
+</div>
+{% for order in page_obj %}
+	{% include 'order/cx_orderComponent.html' %}
+{% endfor %}
+{% endblock %}

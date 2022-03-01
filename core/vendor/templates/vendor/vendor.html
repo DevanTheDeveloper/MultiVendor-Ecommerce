@@ -1,0 +1,101 @@
+{% extends 'site/main.html' %}
+{% load crispy_forms_tags %}
+{% block title %} {{vendor.title}} | {% endblock %}
+
+{% block content %}
+
+<div class="container">
+	
+		<div class="d-flex justify-content-between justify-content-lg-end  mt-2">
+			{% if request.user.is_authenticated %}
+				<span><a style="min-width:15vh" class="btn btn-dark  rounded-pill mx-1"  href="{% url 'createThread' vendor.id %}">Message<br> Seller</a></span>
+			{% endif %}
+		
+		
+			<span><a style="min-width:15vh" class="btn btn-dark rounded-pill mx-1" href="{% url 'vendorReview' vendor.id %}">{{vendor.title}}<br> Reviews</a></span>
+		</div>
+	
+
+
+
+
+
+	<div class="text-center">
+		<h1 class='text-center display-1 '>{{vendor.title}}</h1>
+				{% for category in vendor_categories %}
+					
+						<a class="btn btn-dark rounded-pill" href="{% url 'vendorCategory' category.slug %}">{{category}}</a>
+				
+				{% endfor %}		
+	</div>
+
+
+
+
+	<div class="row g-1">
+
+		<div class="col">
+
+		
+					<div id="pagination-wrapper" class="d-flex justify-content-between">
+					<div class="pagination">
+					    <span class="step-links">
+					        {% if page_obj.has_previous %}
+					            <a href="?page=1">&laquo; first</a>
+					            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+					        {% endif %}
+
+
+
+								        <span class="current d-flex justify-content-end">
+					            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+					        </span>
+					        {% if page_obj.has_next %}
+					            <a href="?page={{ page_obj.next_page_number }}">next</a>
+					            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+					        {% endif %}
+					    </span>
+					</div>
+
+				    <div class="d-flex justify-content-end">
+				    	    <form id="results" method="GET" action="">
+				        		{{ resForm|crispy }}
+				        		<input type="submit" hidden />
+				        	</form>
+				    </div>
+				</div>
+
+			<div class="row justify-content-center">
+				
+
+					{% for product in page_obj  %}
+					<div class='col-md-4 my-3'>
+						{% include "product/detailComponent.html" %}
+					
+					</div>
+					{% endfor %}
+					
+			</div>
+		</div>
+
+		<div class="col-3 d-none d-lg-block ">
+			<div id="subcategory-wrapper" >
+				<h1 class="display-6 text-center mb-2">Filter Section</h1>
+
+				{% for category in vendor_categories %}
+					<div class='text-center my-2'>
+						<a class="btn btn-dark rounded-pill" href="{% url 'vendorCategory' category.slug %}">{{category}}</a>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+
+		
+
+
+
+
+	</div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'site/main.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Product Review | {% endblock %}
+{% block content %}
+
+	<div class="row">
+
+		<div class="col">
+			<div class="row">
+				{% include 'product/detailComponent.html' %}
+			</div>
+			<h1>Other Customer Reviews</h1>
+				{% for review in reviews %}
+				
+		
+				
+				<div class="card">
+				  <div class="card-body">
+
+				    <h5 class="card-title">Headline</h5>
+				    <h6 class="card-subtitle mb-2 text-muted">{{review.writer}}
+				    	
+				    										{% if review.verified %}
+				    											VERIFIED</h6>{% endif %}
+				    <p class="card-text">{{review.comment}}</p>
+				    
+
+				    	<div class='d-flex justify-text-end pt-2'>
+
+							<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="#FFD700" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+
+							<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="#FFD700" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+
+							<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="#FFD700" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+
+
+							<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>						
+						</div>
+
+
+				  </div>
+
+				  <p class="text-end m-2">{{review.created}}</p>
+				</div>
+				{% endfor %}
+			
+			
+		</div>
+
+
+
+		<div class="col">
+			<h1 class="title">Leave a review for {{product.title}}</h1>
+
+			<form method="POST" action="">
+				{% csrf_token %}
+
+				{{form|crispy}}
+
+				<button class="btn btn-primary my-3" action="submit">Submit</button>
+			</form>
+
+			<div class="d-flex justify-content-end">
+				<a class="btn btn-dark" href="{% url 'vendor' product.vendor.id %}">Back to {{product.vendor.title}}'s Store</a>
+			</div>
+		</div>
+
+
+
+	</div>
+
+
+
+
+{% endblock %}

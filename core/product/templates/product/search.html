@@ -1,0 +1,29 @@
+{% extends 'site/main.html' %}
+{% block title %} Search | {% endblock %}
+
+{% block content %}
+
+
+	<div class="row my-4">
+		<h1 class='text-center'>Search: {{query}}</h1>
+	</div>
+	<div class="row mt-4">
+		
+			{% if products %}
+				{% for product in products  %}
+					<div class='col-md-3'>
+						{% include "product/detailComponent.html" %}
+					
+					</div>
+				{% endfor %}
+			{% else %}
+			<div class='col-md-3'>No results were found!</div>
+			{% endif %}
+
+			
+	</div>
+
+
+
+
+{% endblock %}

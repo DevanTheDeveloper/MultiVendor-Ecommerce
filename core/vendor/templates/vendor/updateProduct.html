@@ -1,0 +1,61 @@
+{% extends 'site/main.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Update Product| {% endblock %}
+
+
+{% block content %}
+	<h1 class="display-3"> Update Product Details </h1>
+	<div class="row">
+		<div class="col">
+			<figure class='m-4 h-100'>
+				<img class="img-fluid" src="{{ product.get_thumbnail }}">
+				<p>Main Image</p>
+			</figure>
+		</div>
+		{% if productImages %}
+			{% for item in productImages %}
+			<div class="col">
+				<figure class='m-4 h-100'>
+					<img class="img-fluid" src="{{item.get_thumbnail}}">
+					<p>{{item.title}}</p>
+				</figure>
+
+			</div>
+			{% endfor %}
+		{% endif %}
+
+	<form method="POST" action="" enctype="multipart/form-data">
+		{% csrf_token %}
+
+			
+				{{form|crispy}}
+	
+				<div class="field mt-3">
+					<div class="form-control d-flex justify-content-between">
+
+						<button class="btn btn-success" type="submit">Update Product</button>
+						<a class="btn btn-outline-dark" href="{{request.META.HTTP_REFERER}}">Go Back</a>
+					</div>
+
+				</div>
+		
+		</div>
+	</form>
+
+	<form method="POST" action="" enctype="multipart/form-data">
+		{% csrf_token %}	
+		
+				<h2 class="display-3">Image Gallery</h2>
+				{{imageForm|crispy}}
+				<div class="field mt-3">
+					<div class="form-control d-flex justify-content-between">
+
+						<button class="btn btn-success" type="submit">Add/Update Images</button>
+						<a class="btn btn-outline-dark" href="{{request.META.HTTP_REFERER}}">Go Back</a>
+					</div>
+
+				</div>
+	
+	</form>
+
+{% endblock %}

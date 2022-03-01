@@ -1,0 +1,375 @@
+{% extends 'site/main.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Cart | {% endblock %}
+
+{% block content %}
+	<h1> Cart </h1>
+
+	{% if cart %}
+		<div class="mb-6">
+			<div class="table">
+				<table class="table align-middle">
+					<thead>
+						<th></th>
+						<th>Product</th>
+						<th>Vendor</th>
+						<th>Quantity</th>
+						<th>Price</th>
+						<th></th>
+					</thead>
+
+					<tbody>
+						{% for item in cart %}
+						<tr>
+							<td>
+								<figure class="image my-auto">
+									<img class="img-thumbnail" style="height:10vh;" src="{{ item.product.get_thumbnail }}">
+								</figure>
+							</td>
+
+							<td class="">
+								<a  href="{% url 'productDetail' item.product.category.slug item.product.slug %}"> {{item.product}}</a>
+							</td>
+							<td class="">
+								<a class="btn btn-dark rounded-pill" href="{% url 'vendor' item.product.vendor.id %}">{{item.product.vendor.title}}</a>
+							</td>
+							<td>
+								{{item.quantity}}
+								<a href="?change_quantity={{item.id}}&quantity=-1">-</a>
+								<a href="?change_quantity={{item.id}}&quantity=1">+</a>
+							</td>
+
+							<td>${{ item.total_price }}</td>
+							<td>
+								<a href="?remove_from_cart={{ item.id }}" class="btn-close"></a>
+							</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+
+					<tfoot>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><strong>Cart Total</strong></td>
+							<td><strong>{{ cart|length }}</strong></td>
+							<td colspan="2"><strong>${{ cart.get_total_cost }}</strong></td>
+						</tr>
+
+					</tfoot>
+				</table>
+			</div>
+		</div>
+
+		<h2 class="subtitle mb-3">Contact & Shipping Details</h2>
+
+		<form method="POST" action="" id="payment-form">
+			{% csrf_token %}
+
+			{% if form.non_field_errors %}
+				<div class="text-danger">
+					{{form.non_field_errors}}
+				</div>
+			{% endif %}
+
+
+			{% if form.errors %}
+				<div class="text-danger">
+					<ul>
+						{% for field in form %}
+							{% for error in field.errors %}
+							<li><strong>{{field.label}}:</strong>{{error}}</li>
+							{% endfor %}
+						{% endfor %}
+					</ul>
+				</div>
+			{% endif %}
+
+
+
+			<div class="row px-4 ">
+				<div id="checkout-col-1" class="col">
+					
+					<div class="form-group col-md-6 mb-0">
+				        {{ checkoutForm.first_name|as_crispy_field }}
+				    </div>
+					<div class="form-group col-md-6 mb-0">
+				        {{ checkoutForm.last_name|as_crispy_field }}
+				    </div>
+					<div class="form-group col-md-6 mb-0">
+				        {{ checkoutForm.email|as_crispy_field }}
+				    </div>
+
+					<div class="form-group col-md-6 mb-0">
+				        {{ checkoutForm.phone|as_crispy_field }}
+				    </div>
+
+					<div class="form-group col-md-6 mt-4 mb-0">
+				        {{ checkoutForm.confirmed|as_crispy_field }}
+				    </div>
+				</div>
+				<div id="checkout-col-2" class="col">
+
+					<div class="form-group col-md-6 mb-0">
+				        {{ checkoutForm.address1|as_crispy_field }}
+				    </div>
+					<div class="form-group col-md-6 mb-0">
+				        {{ checkoutForm.address2|as_crispy_field }}
+				    </div>
+					<div class="form-group col-md-6 mb-0">
+				        {{ checkoutForm.city|as_crispy_field }}
+				    </div>
+					<div class="form-group col-md-6 mb-0">
+				        {{ checkoutForm.state|as_crispy_field }}
+				    </div>
+					<div class="form-group col-md-6 mb-0">
+				        {{ checkoutForm.country|as_crispy_field }}
+				    </div>
+					<div class="form-group col-md-6 mb-0">
+				        {{ checkoutForm.zipcode|as_crispy_field }}
+				    </div>
+
+				</div>	
+
+			</div>
+			
+			<div id="shipping-control">
+				<input type="button" onclick="ShippingCalculator()" value="Calculate Shipping" class="btn bg-warning text-dark"/>
+			</div>
+			<div id="shipping-wrapper" class="visually-hidden">
+				<p class="btn">shipping calculations...</p>
+				<p id="shipping-cx"></p>
+				
+
+			</div>
+
+
+
+
+
+			<h2 class="">Payment information</h2>
+
+
+
+
+		<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+		  <li class="nav-item" role="presentation">
+		    <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Stripe</button>
+		  </li>
+		  <li class="nav-item" role="presentation">
+		    <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">PayPal</button>
+		  </li>
+		  <li class="nav-item" role="presentation">
+		    <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">BitCoin</button>
+		  </li>
+		</ul>
+		<div class="tab-content" id="pills-tabContent">
+		  <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+
+		  	<div id="stripe-wrapper" >
+				<div id="card-element">
+					<!--stripe element-->
+				</div>
+				<div id="card-errors">
+					<!--stripe errors--> 
+				</div>
+				
+				{% if messages %}
+					{% for message in messages %}
+						<div class="notification is-toast bg-danger">{{message}}</div>
+					{% endfor %}
+				{% endif %}
+
+				<div id="checkout-control" class="field">
+					<div class="control">
+						<input type="submit" value="Checkout" class="btn bg-dark text-light"/>
+					</div>
+				</div>
+			</div>
+
+		  </div>
+		  <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+		  	
+		  	<div id="paypal-wrapper">
+		  		<div id="paypal-button-container">
+		  			
+
+		  		</div>
+		  	</div>
+
+		  </div>
+		  <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">Bitcoin</div>
+		</div>
+
+
+
+	</form>
+
+		
+
+
+			{% else %}
+				<p> You don't have any products in your cart!</p>
+			{% endif %}
+
+
+
+{% endblock%}
+
+
+{% block scripts %}
+	<script src="https://js.stripe.com/v3/"></script>
+
+	<script>
+		//shipping 
+
+		function ShippingCalculator(){
+
+    	console.log('Shipping Calculator...')
+    	cxzip = document.getElementById('id_zipcode').value
+    	console.log('cx postal code',cxzip)
+    	document.getElementById('shipping-control').classList.add("visually-hidden");
+    	document.getElementById('shipping-wrapper').classList.remove("visually-hidden");
+		};
+
+
+
+		var stripe = Stripe('{{stripe_pub_key}}');
+		var elements = stripe.elements();
+
+		var card = elements.create('card')
+
+		card.mount('#card-element')
+
+		var form = document.getElementById('checkout-control');
+		form.addEventListener('submit',function(event){
+			event.preventDefault();
+			console.log('activated')
+			stripe.createToken(card).then(function(result) {
+
+				if (result.error){
+					console.log('there was an error')
+					var errorElement=document.getElementById('card-errors');
+					errorElement.textContent = result.error.message;
+				} else{
+					console.log(result)
+					console.log(result.token)
+					stripeTokenHandler(result.token);
+				}
+			});
+		});
+
+		function stripeTokenHandler(token) {
+			var form = document.getElementById('payment-form');
+			var hiddenInput = document.createElement('input');
+			hiddenInput.setAttribute('type','hidden');
+			hiddenInput.setAttribute('name','stripe_token');
+			hiddenInput.setAttribute('value',token.id);
+			form.appendChild(hiddenInput);
+
+			var pay_option = document.createElement('input');
+			pay_option.setAttribute('type','hidden');
+			pay_option.setAttribute('name','pay_option');
+			pay_option.setAttribute('value','stripe');
+			form.appendChild(pay_option);
+
+			alert('Transaction completed');
+			form.submit();
+		};
+
+
+
+		
+
+	    /*document.getElementById('make-payment').addEventListener('click', function(e){
+	    	submitFormData()
+	    })*/
+
+	    function submitFormData(details){
+	    	console.log('Payment button clicked')
+	    	var form = document.getElementById('payment-form')
+
+	    	var hiddenInput = document.createElement('input');
+			hiddenInput.setAttribute('type','hidden');
+			hiddenInput.setAttribute('name','pay_option');
+			hiddenInput.setAttribute('value','paypal');
+			form.appendChild(hiddenInput);
+
+			var invoiceID = details.id
+
+			var invoiceInput = document.createElement('input');
+			invoiceInput.setAttribute('type','hidden');
+			invoiceInput.setAttribute('name','invoiceID');
+			invoiceInput.setAttribute('value',invoiceID);
+			form.appendChild(invoiceInput);
+
+			console.log(form)
+	
+	    	const formData  = new FormData(form)
+	    	for(var pair in formData.entries()) {
+    				console.log(pair);
+  									}
+
+	    	var url = "/cart/"
+	    	fetch(url, {
+	    		method:'POST',
+	    		headers:{
+	    			'X-CSRFToken':'{{csrf_token}}',
+
+	    		}, 
+	    		body:formData
+	    		
+	    	})
+	    	.then((response) => response.json())
+	    	.then((data) => {
+				console.log('Success:', data);
+				alert('Transaction completed');  
+
+				window.location.href = "{% url 'success' %}"
+
+				});
+	    };
+	</script>
+
+
+	<script src="https://www.paypal.com/sdk/js?client-id=AdVSnF9H1yIVrI5zwN_4pS9uu06vSX8yLrTZ8-Iq7ALLWcBbFI-x8IspdNWx9-dRFvsmFs14KkV-3rxL&components=buttons&currency=USD"></script>
+	<script>
+		//render the paypal button into #paypal-button-container
+		paypal.Buttons({
+
+			style : {
+				color:'gold',
+				shape:'pill',
+
+			},
+			//set up the transaction
+			createOrder: function(data, actions){
+				return actions.order.create({
+					purchase_units: [{
+						amount : {
+							value:parseFloat('{{cart.get_total_cost|floatformat:2}}').toFixed(2)
+						}
+					}]
+				});
+			},
+
+
+			// Finalize the transaction
+
+		onApprove: function(data, actions) {
+			return actions.order.capture().then(function(details){
+				//show a success message to the buyer
+				alert('Transaction completed by ' + details.payer.name.given_name);
+				submitFormData(details);
+			});
+		},
+
+		onError: function (err) {
+		    // For example, redirect to a specific error page
+		    console.log(err)
+		  }
+
+		}).render('#paypal-button-container');
+	</script>
+
+{% endblock %}
